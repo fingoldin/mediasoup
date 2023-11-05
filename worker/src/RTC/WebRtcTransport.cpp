@@ -1082,6 +1082,8 @@ namespace RTC
 	{
 		MS_TRACE();
 
+		auto t1 = std::chrono::high_resolution_clock::now();
+
 		// Ensure DTLS is connected.
 		if (this->dtlsTransport->GetState() != RTC::DtlsTransport::DtlsState::CONNECTED)
 		{
@@ -1146,6 +1148,10 @@ namespace RTC
 
 		// Pass the packet to the parent transport.
 		RTC::Transport::ReceiveRtpPacket(packet);
+
+		auto t2 = std::chrono::high_resolution_clock::now();
+
+		std::cout << "RTP:" << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us," << len << "B" << std::endl;
 	}
 
 	inline void WebRtcTransport::OnRtcpDataReceived(

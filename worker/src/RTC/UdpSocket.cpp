@@ -5,6 +5,10 @@
 #include "Logger.hpp"
 #include "RTC/PortManager.hpp"
 #include <string>
+#include <chrono>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
 
 namespace RTC
 {
@@ -46,7 +50,12 @@ namespace RTC
 			return;
 		}
 
+		auto t1 = std::chrono::high_resolution_clock::now();
 		// Notify the reader.
 		this->listener->OnUdpSocketPacketReceived(this, data, len, addr);
+		auto t2 = std::chrono::high_resolution_clock::now();
+
+		//std::cout << "PP:" << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us" << std::endl;
 	}
+
 } // namespace RTC
