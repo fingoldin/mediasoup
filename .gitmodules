@@ -1,0 +1,2 @@
+[submodule "./mediasoup"]
+	url = https://github.com/fingoldin/mediasoup.git

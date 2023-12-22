@@ -58,7 +58,7 @@ namespace RTC
 	 * not properly fit (by ensuring that elements in the buffer are not only
 	 * ordered by increasing seq but also that their timestamp are incremental).
 	 */
-	void RtpRetransmissionBuffer::Insert(
+	void RtpRetransmissionBuffer:: Insert(
 	  RTC::RtpPacket* packet, std::shared_ptr<RTC::RtpPacket>& sharedPacket)
 	{
 		MS_TRACE();

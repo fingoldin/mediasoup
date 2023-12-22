@@ -10,10 +10,17 @@ public:
 protected:
     void ProcessPacket(const uint8_t* data, size_t len);
 
+    // WebrtcServer::mapTupleWebRtcTransport contains hash
+    // Within WebrtcTransport:
+    //   dtlsTransport->GetState() == RTC::DtlsTransport::DtlsState::CONNECTED
+    //   srtpRecvSession != nullptr
+
+    const static size_t MaxTuples = 8;
+
     uint8_t transportReady[TRANSPORT_HASH_MAP_SIZE/8];
   
     transport_hash_t selectedTuples[TRANSPORT_HASH_MAP_SIZE];
-    transport_hash_t additionalTuples[TRANSPORT_HASH_MAP_SIZE][8];
+    transport_hash_t additionalTuples[TRANSPORT_HASH_MAP_SIZE][MaxTuples];
 
     uint8_t midExtensionIds[TRANSPORT_HASH_MAP_SIZE];
     uint8_t ridExtensionIds[TRANSPORT_HASH_MAP_SIZE];

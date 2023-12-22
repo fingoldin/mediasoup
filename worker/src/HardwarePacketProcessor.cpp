@@ -7,7 +7,33 @@ HardwarePacketProcessor::HardwarePacketProcessor()
 
 void HardwarePacketProcessor::ProcessPacket(const uint8_t* data, size_t len)
 {
-    uint64_t hash = this->GetWebrtcTransportHash();
+    uint64_t transportHash;
+
+    if(!this->transportReady[transportHash]) {
+        // drop 
+    }
+
+    if(this->selectedTuples[transportHash] != transportHash) {
+        bool found = false;
+        for(int i = 0; i < HardwarePacketProcessor::MaxTuples; i++) {
+            if(this->additionalTuples[transportHash] == transportHash) {
+                found = true;
+                break;
+            }
+        }
+        if (!found)
+        {
+            // drop
+        }
+    }
+
+    // Decrypt packet
+
+    // Check if packet is valid RTP packet, else drop
+
+    this->selectedTuples[transportHash] = transportHash;
+
+    
 }
 
 uint64_t HardwarePacketProcessor::GetWebrtcTransportHashIPv4(const uint64_t address, const uint64_t port)
