@@ -6,6 +6,7 @@
 #include "MediaSoupErrors.hpp"
 #include "Utils.hpp"
 #include <cmath> // std::pow()
+#include "HardwareDriver.hpp";
 
 namespace RTC
 {
@@ -458,6 +459,8 @@ namespace RTC
 		  "WebRtcTransport already handled");
 
 		this->webRtcTransports.insert(webRtcTransport);
+
+		HardwareDriver::OnWebRtcTransportCreated(webRtcTransport->id);
 	}
 
 	inline void WebRtcServer::OnWebRtcTransportClosed(RTC::WebRtcTransport* webRtcTransport)
@@ -469,6 +472,8 @@ namespace RTC
 		  "WebRtcTransport not handled");
 
 		this->webRtcTransports.erase(webRtcTransport);
+
+		HardwareDriver::OnWebRtcTransportClosed(webRtcTransport->id);
 	}
 
 	inline void WebRtcServer::OnWebRtcTransportLocalIceUsernameFragmentAdded(
