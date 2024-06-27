@@ -3,7 +3,7 @@
 
 #include "RTC/RTCP/SenderReport.hpp"
 #include "Logger.hpp"
-#include <cstring>
+#include <cstring> // std::memcpy
 
 namespace RTC
 {
@@ -70,7 +70,9 @@ namespace RTC
 			SenderReport* report = SenderReport::Parse(data + offset, len - offset);
 
 			if (report)
+			{
 				packet->AddReport(report);
+			}
 
 			return packet.release();
 		}

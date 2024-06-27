@@ -4,7 +4,7 @@
 #include "RTC/RTCP/ReceiverReport.hpp"
 #include "Logger.hpp"
 #include "Utils.hpp"
-#include <cstring>
+#include <cstring> // std::memcpy
 
 namespace RTC
 {
@@ -92,7 +92,9 @@ namespace RTC
 			packet->SetSsrc(ssrc);
 
 			if (offset == 0)
+			{
 				offset = Packet::CommonHeaderSize + 4u /* ssrc */;
+			}
 
 			uint8_t count = header->count;
 

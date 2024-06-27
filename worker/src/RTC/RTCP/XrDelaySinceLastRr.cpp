@@ -3,7 +3,7 @@
 
 #include "RTC/RTCP/XrDelaySinceLastRr.hpp"
 #include "Logger.hpp"
-#include <cstring>
+#include <cstring> // std::memcpy
 
 namespace RTC
 {
@@ -75,14 +75,12 @@ namespace RTC
 				{
 					report->AddSsrcInfo(ssrcInfo);
 					offset += ssrcInfo->GetSize();
+					reportLength -= ssrcInfo->GetSize();
 				}
 				else
 				{
 					return report.release();
 				}
-
-				offset += ssrcInfo->GetSize();
-				reportLength -= DelaySinceLastRr::SsrcInfo::BodySize;
 			}
 
 			return report.release();
