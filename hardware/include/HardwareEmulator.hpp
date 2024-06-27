@@ -14,7 +14,7 @@ typedef struct transport_tuple {
     bool isIPv6;
 } transport_tuple_t;
 typedef struct transport_state {
-    uint64_t nbytes_recv; 
+    uint64_t nbytes_recv;
     uint64_t nbytes_trans;
     uint16_t id;
     uint128_t salt; // network byte order, 112 bits
