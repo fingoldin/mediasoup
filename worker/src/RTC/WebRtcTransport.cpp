@@ -926,8 +926,6 @@ namespace RTC
 	{
 		MS_TRACE();
 
-		auto t1 = std::chrono::high_resolution_clock::now();
-
 		// Ensure DTLS is connected.
 		if (this->dtlsTransport->GetState() != RTC::DtlsTransport::DtlsState::CONNECTED)
 		{
@@ -951,6 +949,8 @@ namespace RTC
 
 			return;
 		}
+
+		auto t1 = std::chrono::high_resolution_clock::now();
 
 		// Decrypt the SRTP packet.
 		if (!this->srtpRecvSession->DecryptSrtp(const_cast<uint8_t*>(data), &len))
@@ -976,6 +976,9 @@ namespace RTC
 			return;
 		}
 
+		auto t2 = std::chrono::high_resolution_clock::now();
+		std::cout << "Decrypt:" << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us," << len << "B" << std::endl;
+
 		RTC::RtpPacket* packet = RTC::RtpPacket::Parse(data, len);
 
 		if (!packet)
@@ -985,15 +988,17 @@ namespace RTC
 			return;
 		}
 
+		auto t3 = std::chrono::high_resolution_clock::now();
+		std::cout << "Parse:" << std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count() << "us," << std::endl;
+
 		// Trick for clients performing aggressive ICE regardless we are ICE-Lite.
 		this->iceServer->MayForceSelectedTuple(tuple);
 
 		// Pass the packet to the parent transport.
 		RTC::Transport::ReceiveRtpPacket(packet);
 
-		auto t2 = std::chrono::high_resolution_clock::now();
-
-		std::cout << "RTP:" << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us," << len << "B" << std::endl;
+		auto t4 = std::chrono::high_resolution_clock::now();
+		std::cout << "Receive:" << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << "us," << std::endl;
 	}
 
 	inline void WebRtcTransport::OnRtcpDataReceived(
@@ -1025,13 +1030,21 @@ namespace RTC
 			return;
 		}
 
+		auto t1 = std::chrono::high_resolution_clock::now();
+
 		// Decrypt the SRTCP packet.
 		if (!this->srtpRecvSession->DecryptSrtcp(const_cast<uint8_t*>(data), &len))
 		{
 			return;
 		}
 
+		auto t2 = std::chrono::high_resolution_clock::now();
+		std::cout << "Decrypt RTCP:" << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count() << "us," << len << "B" << std::endl;
+
 		RTC::RTCP::Packet* packet = RTC::RTCP::Packet::Parse(data, len);
+
+		auto t3 = std::chrono::high_resolution_clock::now();
+		std::cout << "Parse RTCP:" << std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count() << "us," << len << "B" << std::endl;
 
 		if (!packet)
 		{
@@ -1042,6 +1055,10 @@ namespace RTC
 
 		// Pass the packet to the parent transport.
 		RTC::Transport::ReceiveRtcpPacket(packet);
+
+		auto t4 = std::chrono::high_resolution_clock::now();
+		std::cout << "Receive RTCP:" << std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count() << "us," << len << "B" << std::endl;
+
 	}
 
 	inline void WebRtcTransport::OnUdpSocketPacketReceived(
